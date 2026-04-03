@@ -163,7 +163,7 @@ export class Dashboard {
       setTimeout(() => {
           const canvas = document.getElementById('qrcode-canvas');
           if (canvas) {
-              QRCode.toCanvas(canvas, this.gameState.sessionId(), {
+              QRCode.toCanvas(canvas, this.gameState.generateSyncPayload(), {
                   width: 200,
                   margin: 1,
                   color: { dark: '#00A3FF', light: '#ffffff' }

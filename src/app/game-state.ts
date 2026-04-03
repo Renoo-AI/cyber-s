@@ -618,13 +618,26 @@ export class GameStateService {
   // Session Sync Infrastructure
   sessionId = signal<string>(crypto.randomUUID());
   
-  syncDevice(id: string) {
-    if (id === this.sessionId()) {
-       this.byteMood.set('excited');
-       this.byteMessage.set(`Successfully synchronized with Tactical Node [${id.substring(0,8)}]. Link established.`);
-    } else {
-       this.byteMood.set('idle');
-       this.byteMessage.set('Invalid session signature. Sync failed.');
+  generateSyncPayload(): string {
+    return `${this.sessionId()}|${this.solvedChallenges().join(',')}`;
+  }
+  
+  syncDevice(payload: string) {
+    if (payload.includes('|')) {
+       const parts = payload.split('|');
+       const id = parts[0];
+       const data = parts[1];
+       
+       if (id) {
+           const solved = data ? data.split(',').map(n => parseInt(n, 10)) : [];
+           this.solvedChallenges.set(solved);
+           this.byteMood.set('excited');
+           this.byteMessage.set(`Successfully synchronized with Tactical Node [${id.substring(0,8)}]. Link established.`);
+           return;
+       }
     }
+    // Error state
+    this.byteMood.set('idle');
+    this.byteMessage.set('Invalid session signature. Sync failed.');
   }
 }
