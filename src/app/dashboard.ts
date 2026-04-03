@@ -35,10 +35,30 @@ import {CHALLENGES, GameStateService} from './game-state';
             </div>
           </div>
         </div>
+        </div>
+      </div>
+
+      <!-- Badges / Achievements -->
+      <div class="mb-14 max-w-4xl mx-auto z-10 relative">
+         <h3 class="text-[10px] font-display font-black text-white uppercase tracking-[0.2em] mb-4 border-b border-outline-variant pb-2">Tactical Badges</h3>
+         <div class="flex flex-wrap justify-center gap-4">
+            @for(ach of gameState.achievements(); track ach.id) {
+               <div class="p-3 w-32 modern-card shadow-none flex flex-col items-center text-center transition-all duration-300"
+                    [ngClass]="ach.unlocked ? 'opacity-100 scale-100 shadow-[0_4px_0_rgba(0,163,255,0.4)] border-2 border-[#00A3FF] bg-[#151925]' : 'opacity-40 scale-95 border-2 border-outline-variant grayscale bg-transparent'">
+                  <div class="w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                       [style.backgroundColor]="ach.unlocked ? ach.color + '20' : '#333'"
+                       [style.border]="ach.unlocked ? '2px solid ' + ach.color : '2px solid #555'">
+                     <mat-icon [style.color]="ach.unlocked ? ach.color : '#888'">{{ ach.icon }}</mat-icon>
+                  </div>
+                  <h4 class="text-[10px] uppercase font-bold text-white mb-1 leading-tight">{{ ach.name }}</h4>
+                  <p class="text-[8px] text-ui-muted uppercase tracking-wider leading-tight">{{ ach.desc }}</p>
+               </div>
+            }
+         </div>
       </div>
 
       <!-- Strategic Sectors -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-24">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-24 relative z-10">
         <!-- Sector 1: Starter (Blue) -->
         <div class="modern-card group hover:scale-[1.02] transition-transform duration-300 shadow-[8px_8px_0px_0px_#5eb4ff,16px_16px_0px_0px_rgba(94,180,255,0.1)] hover:shadow-[12px_12px_0px_0px_#5eb4ff,24px_24px_0px_0px_rgba(94,180,255,0.2)] border-[#0a0e17] relative overflow-hidden bg-[#151925]/90">
              <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 blur-3xl rounded-full"></div>

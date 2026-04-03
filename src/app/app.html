@@ -23,6 +23,19 @@
           <button (click)="startScanner()" *ngIf="!scannerRunning()" class="modern-button w-full text-center uppercase tracking-widest text-sm py-4 active:translate-y-1">Activate Scanner</button>
       </div>
 
+      <!-- Glitch Transition Overlay (shown during syncAnimating) -->
+      <div *ngIf="syncAnimating()" class="flex flex-col items-center justify-center p-6 h-screen relative z-[100] bg-black overflow-hidden pointer-events-none">
+          <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/l41JUKbg81H5bXFzG/giphy.gif')] opacity-20 mix-blend-screen bg-cover bg-center"></div>
+          <div class="absolute inset-0" style="background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);"></div>
+          
+          <h1 class="text-5xl font-black font-display text-white uppercase tracking-tighter mix-blend-difference z-10 glitch-text animate-pulse">Syncing...</h1>
+          <p class="text-primary text-xs uppercase tracking-[0.3em] mt-4 font-bold animate-bounce z-10">P2P Payload Detected</p>
+          
+          <div class="w-full h-1 bg-primary/30 mt-8 relative overflow-hidden">
+             <div class="absolute left-0 h-full bg-[#00ff00] w-full animate-[progress_1.2s_ease-in-out_forwards]"></div>
+          </div>
+      </div>
+
       <!-- Progress Tracker Section (shown if isSynced === true) -->
       <div *ngIf="isSynced()" class="flex flex-col p-6 pb-40">
           
@@ -51,8 +64,22 @@
               <p class="text-sm text-white italic opacity-90 leading-relaxed relative z-10">"{{ gameState.byteMessage() }}"</p>
           </div>
 
+          <!-- Mobile Badges / Achievements -->
+          <h3 class="text-[10px] font-black font-display text-white uppercase tracking-[0.2em] mb-4 border-b border-outline-variant pb-2 mt-4">Tactical Badges</h3>
+          <div class="flex flex-wrap gap-2 mb-10 w-full overflow-x-auto pb-4 snap-x">
+             @for(ach of gameState.achievements(); track ach.id) {
+                <div class="p-2 min-w-[100px] flex-shrink-0 snap-center flex justify-center items-center flex-col bg-[#151925] border-2 transition-all"
+                     [ngClass]="ach.unlocked ? 'border-[#00A3FF] shadow-[0_2px_0_#00A3FF]' : 'border-outline-variant opacity-40 grayscale'">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center mb-1" [style.backgroundColor]="ach.color + '20'">
+                       <mat-icon class="text-sm scale-90" [style.color]="ach.color">{{ ach.icon }}</mat-icon>
+                    </div>
+                    <span class="text-[8px] uppercase font-bold text-white text-center leading-tight">{{ ach.name }}</span>
+                </div>
+             }
+          </div>
+
           <!-- Sector Progress -->
-          <h3 class="text-[10px] font-black font-display text-white uppercase tracking-[0.2em] mb-6 border-b border-outline-variant pb-2">Global Deployment Progress</h3>
+          <h3 class="text-[10px] font-black font-display text-white uppercase tracking-[0.2em] mb-6 border-b border-outline-variant pb-2 z-10 relative">Global Deployment Progress</h3>
           <div class="space-y-6 flex flex-col relative z-10 w-full overflow-hidden">
               <!-- Sector 1 -->
               <div>

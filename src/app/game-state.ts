@@ -596,6 +596,23 @@ export class GameStateService {
   
   totalFlags = computed(() => this.solvedChallenges().length);
   
+  // Achievements Engine
+  achievements = computed(() => {
+     const solved = this.solvedChallenges();
+     const s1 = solved.filter(id => id >= 1 && id <= 20).length;
+     const s2 = solved.filter(id => id >= 21 && id <= 40).length;
+     const s3 = solved.filter(id => id >= 41 && id <= 60).length;
+     const s4 = solved.filter(id => id >= 61 && id <= 80).length;
+     
+     return [
+         { id: 'first_blood', name: 'First Blood', desc: 'Complete your first exploit.', icon: 'local_fire_department', color: '#ff3333', unlocked: solved.length >= 1 },
+         { id: 'starter_cleared', name: 'Starter Cleared', desc: 'Secure the Starter Sector.', icon: 'rocket_launch', color: '#00A3FF', unlocked: s1 >= 20 },
+         { id: 'logic_master', name: 'Logic Master', desc: 'Master Input & Logic.', icon: 'psychology', color: '#b091ff', unlocked: s2 >= 20 },
+         { id: 'web_menace', name: 'Web Menace', desc: 'Conquer Web Attacks.', icon: 'radar', color: '#ff9900', unlocked: s3 >= 20 },
+         { id: 'hacker_elite', name: 'Hacker Elite', desc: 'Rule the Hacker Mode.', icon: 'terminal', color: '#00ff00', unlocked: s4 >= 20 },
+     ];
+  });
+
   isSolved(id: number) {
     return this.solvedChallenges().includes(id);
   }
@@ -607,6 +624,16 @@ export class GameStateService {
       if (challenge) {
         this.byteMood.set('excited');
         this.byteMessage.set(`Target Acquired: ${challenge.explanation.bug}!`);
+        
+        // Progress interaction sound (Tactical Click / Success Chime)
+        if (id === 80) {
+            // Final Boss sound sequence
+            this.playBeep(440, 'square', 0.2);
+            setTimeout(() => this.playBeep(554, 'square', 0.2), 200);
+            setTimeout(() => this.playBeep(659, 'square', 0.4), 400);
+        } else {
+            this.playBeep(1200, 'sine', 0.1);
+        }
       }
     }
   }
@@ -633,11 +660,36 @@ export class GameStateService {
            this.solvedChallenges.set(solved);
            this.byteMood.set('excited');
            this.byteMessage.set(`Successfully synchronized with Tactical Node [${id.substring(0,8)}]. Link established.`);
+           this.playBeep(880, 'sine', 0.1);
+           setTimeout(() => this.playBeep(1760, 'square', 0.2), 100);
            return;
        }
     }
     // Error state
     this.byteMood.set('idle');
     this.byteMessage.set('Invalid session signature. Sync failed.');
+    this.playBeep(200, 'sawtooth', 0.3);
+  }
+
+  // Audio Engine
+  playBeep(freq: number, type: OscillatorType, duration: number) {
+    if (typeof window === 'undefined') return;
+    try {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
+        osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+        // Audio might be blocked initially by browser policy until interaction
+        console.warn('Audio play blocked:', e);
+    }
   }
 }

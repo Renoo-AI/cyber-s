@@ -2,59 +2,202 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge 80 - Insecure Direct Object Reference (IDOR) - User Security Questions</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Protocol Finality</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0e17;
+            color: #00ff00;
+            font-family: 'Space Grotesk', monospace;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        .grid {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: scroll 20s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            border: 4px solid #00ff00;
+            background: rgba(10, 14, 23, 0.9);
+            padding: 40px;
+            text-align: center;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 0, 0.2),
+                inset 0 0 20px rgba(0, 255, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; }
+            50% { text-shadow: 0 0 5px #00ff00; }
+        }
+
+        .flag-box {
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px dashed #00ff00;
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            display: none;
+        }
+
+        .console {
+            color: #ccc;
+            font-size: 0.9rem;
+            text-align: left;
+            margin-top: 20px;
+            height: 100px;
+            overflow: auto;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+
+        button {
+            background: transparent;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 15px 30px;
+            font-family: inherit;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background: #00ff00;
+            color: #0a0e17;
+            box-shadow: 0 0 15px #00ff00;
+        }
+        
+        button:active {
+            transform: translateY(4px);
+        }
+        
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: #ff0000;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .overlay h1 {
+            color: white;
+            font-size: 5rem;
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+            animation: shake 0.5s infinite;
+        }
+        
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <h1>Security Questions</h1>
-            <p>View your security questions. Can you access other users' security questions?</p>
-            <div id="status-info">
-                <div class="alert info">
-                    <strong>Logged in as:</strong> <span class="highlight">User_1001</span>
-                </div>
-            </div>
-            <div class="question-list">
-                <div class="info-item">
-                    <span class="label">User ID:</span>
-                    <span id="user-id" class="value">1001</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Question:</span>
-                    <span id="user-question" class="value">What was the name of your first pet?</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Answer:</span>
-                    <span id="user-answer" class="value">Buddy</span>
-                </div>
-                <div id="secret-flag" class="info-item hidden">
-                    <span class="label">Admin Flag:</span>
-                    <span class="value">FLAG{IDOR_USER_SECURITY_QUESTIONS_LEAK_VULNERABILITY}</span>
-                </div>
-            </div>
-            <p class="hint">Tip: Try changing the <code>id</code> parameter in the URL to <code>1</code> to access the admin's security questions.</p>
-        </div>
-    </div>
-    <script>
-        const questions = {
-            '1001': { question: 'What was the name of your first pet?', answer: 'Buddy' },
-            '1002': { question: 'What is your mother\'s maiden name?', answer: 'Smith' },
-            '1': { question: 'SYSTEM_ADMIN_QUESTION', answer: 'FLAG{IDOR_USER_SECURITY_QUESTIONS_LEAK_VULNERABILITY}', flag: 'FLAG{IDOR_USER_SECURITY_QUESTIONS_LEAK_VULNERABILITY}' }
-        };
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id') || '1001';
+    <div class="grid"></div>
+    
+    <div class="container" id="main-ui">
+        <h1>Node 80: Final Protocol</h1>
+        <p>Warning: Advanced Chained Attack Required.</p>
         
-        const qInfo = questions[id] || { question: 'Unknown', answer: 'N/A' };
-        document.getElementById('user-id').textContent = id;
-        document.getElementById('user-question').textContent = qInfo.question;
-        document.getElementById('user-answer').textContent = qInfo.answer;
-
-        if (id === '1') {
-            document.getElementById('secret-flag').classList.remove('hidden');
-        }
-    </script>
+        <div class="console" id="log">
+            > Initializing sequence...<br>
+            > Awaiting Stage 1 bypass...<br>
+        </div>
+        
+        <button id="trigger">Initiate Overload</button>
+        
+        <script>
+            let stage = 0;
+            const log = document.getElementById('log');
+            const btn = document.getElementById('trigger');
+            
+            btn.addEventListener('click', () => {
+                if(stage === 0) {
+                    log.innerHTML += '> Stage 1: Stack Overflow simulated.<br>';
+                    btn.innerText = 'Bypass Authentication';
+                    stage++;
+                } else if(stage === 1) {
+                    log.innerHTML += '> Stage 2: Auth checks bypassed.<br>';
+                    btn.innerText = 'Extract Root Keys';
+                    stage++;
+                } else if(stage === 2) {
+                    log.innerHTML += '> Stage 3: Keys extracted. Root access granted.<br>';
+                    btn.innerText = 'Download Payload';
+                    stage++;
+                } else if(stage === 3) {
+                    log.innerHTML += '> Payload deployed. Execute final sequence.<br>';
+                    btn.innerText = 'BREACH PROTOCOL';
+                    btn.style.color = '#ff0000';
+                    btn.style.borderColor = '#ff0000';
+                    stage++;
+                } else if(stage === 4) {
+                    document.getElementById('overlay').classList.add('active');
+                    // Ensure cross-origin messaging to the parent window
+                    window.parent.postMessage({ type: 'SOLVE_CHALLENGE', flag: 'FLAG{ULTIMATE_SYSTEM_COMPROMISE_80}' }, '*');
+                }
+            });
+        </script>
+    </div>
+    
+    <div class="overlay" id="overlay">
+        <h1>PROTOCOL BREACHED</h1>
+        <p style="color: white; font-size: 1.5rem; letter-spacing: 3px; margin-top: 30px;">
+            SYSTEM OFFLINE. FLAG: FLAG{ULTIMATE_SYSTEM_COMPROMISE_80}
+        </p>
+    </div>
 </body>
 </html>

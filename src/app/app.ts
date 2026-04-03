@@ -20,6 +20,7 @@ export class App {
 
   isSynced = signal(false);
   scannerRunning = signal(false);
+  syncAnimating = signal(false);
 
   sector1Solved = computed(() => this.gameState.solvedChallenges().filter((id: number) => id >= 1 && id <= 20).length);
   sector2Solved = computed(() => this.gameState.solvedChallenges().filter((id: number) => id >= 21 && id <= 40).length);
@@ -33,9 +34,15 @@ export class App {
           scanner.render(
               (decodedText: string) => {
                   this.gameState.syncDevice(decodedText);
-                  this.isSynced.set(true);
                   scanner.clear();
                   this.scannerRunning.set(false);
+                  
+                  // Glitch transition
+                  this.syncAnimating.set(true);
+                  setTimeout(() => {
+                      this.syncAnimating.set(false);
+                      this.isSynced.set(true);
+                  }, 1200);
               },
               (error: any) => { /* ignore */ }
           );
