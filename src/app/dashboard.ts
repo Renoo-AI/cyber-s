@@ -35,7 +35,6 @@ import {CHALLENGES, GameStateService} from './game-state';
             </div>
           </div>
         </div>
-        </div>
       </div>
 
       <!-- Badges / Achievements -->
