@@ -23,7 +23,7 @@ import {CHALLENGES, GameStateService} from './game-state';
         </div>
         
         <!-- Live Feed / Byte's HUD -->
-        <div class="max-w-2xl mx-auto bg-[#151925]/80 backdrop-blur-md border-4 border-[#0a0e17] rounded-2xl p-6 shadow-[0px_4px_0px_#00A3FF,inset_0_0_15px_rgba(0,163,255,0.2)] relative overflow-hidden">
+        <div class="byte-hud max-w-2xl mx-auto bg-[#151925]/80 backdrop-blur-md rounded-2xl p-6 shadow-[0px_4px_0px_#00A3FF,inset_0_0_15px_rgba(0,163,255,0.2)] relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-30" style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,163,255,0.1) 2px, rgba(0,163,255,0.1) 4px);"></div>
           <div class="flex items-center gap-4 relative z-10">
             <div class="w-12 h-12 rounded-full border-2 border-[#00A3FF] flex justify-center items-center flex-shrink-0 animate-pulse-slow bg-primary/20">
