@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 7 - JS Bypass</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Input Validation</h1>
+            <p>This input is blocked by JavaScript. Can you bypass the restriction?</p>
+            <div class="form-group">
+                <input type="text" id="secret-input" placeholder="Type 'admin' to see flag" onkeydown="return false;">
+            </div>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Bypassed!</strong> The flag is: <span class="flag">FLAG{JS_BYPASS_KEYDOWN}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: You can change the element attributes or use the console to set the value.</p>
+        </div>
+    </div>
+    <script>
+        const input = document.getElementById('secret-input');
+        const result = document.getElementById('result');
+        
+        // Check value periodically
+        setInterval(() => {
+            if (input.value === 'admin') {
+                result.classList.remove('hidden');
+            }
+        }, 500);
+    </script>
+</body>
+</html>

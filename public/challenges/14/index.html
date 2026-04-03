@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 14 - JS Password</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Login</h1>
+            <p>The password for this page is hidden in the JavaScript source code. Can you find it?</p>
+            <div class="form-group">
+                <input type="password" id="pass-input" placeholder="Password">
+            </div>
+            <button class="modern-button" onclick="checkPass()">Login</button>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Logged in!</strong> The flag is: <span class="flag">FLAG{JS_SOURCE_PASSWORD}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: View the page source or use DevTools to find the 'checkPass' function.</p>
+        </div>
+    </div>
+    <script>
+        function checkPass() {
+            const pass = document.getElementById('pass-input').value;
+            // The secret password is 'SuperSecret123'
+            if (pass === 'SuperSecret123') {
+                document.getElementById('result').classList.remove('hidden');
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 15 - File Guessing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>File Discovery</h1>
+            <p>This page says it's not found, but maybe there's a backup or a config file nearby?</p>
+            <div class="alert info">
+                <strong>Status:</strong> 404 Not Found
+            </div>
+            <p>Try common file names like <code>config.php</code>, <code>backup.zip</code>, or <code>.env</code>.</p>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Found!</strong> The flag is: <span class="flag">FLAG{FILE_ENUMERATION_BASIC}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: For this challenge, just try to access <code>/challenges/15/config.json</code>.</p>
+        </div>
+    </div>
+    <script>
+        // In a real scenario, the user would navigate to the file.
+        // We simulate this by checking if they "found" it.
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 19 - Console Error</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Console Secrets</h1>
+            <p>The application is throwing an error in the console. Maybe it contains something useful?</p>
+            <div class="alert info">
+                <strong>Check the Console!</strong> Open DevTools (F12) and look at the 'Console' tab.
+            </div>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Found!</strong> The flag is: <span class="flag">FLAG{CONSOLE_LOG_SECRET}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: Developers often leave sensitive information in console logs or errors.</p>
+        </div>
+    </div>
+    <script>
+        console.error("Critical Error: Unauthorized access attempt at /api/v1/flag?secret=FLAG{CONSOLE_LOG_SECRET}");
+        console.log("Debug: Flag found in error message above.");
+    </script>
+</body>
+</html>

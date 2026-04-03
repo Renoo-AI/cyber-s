@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 11 - JS Check Bypass</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Admin Check</h1>
+            <p>The system checks your username. Can you trick it into thinking you are 'admin'?</p>
+            <div class="form-group">
+                <input type="text" id="user-input" placeholder="Enter username" value="guest">
+            </div>
+            <button class="modern-button" onclick="checkUser()">Check Status</button>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Welcome Admin!</strong> The flag is: <span class="flag">FLAG{JS_VARIABLE_OVERRIDE}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: The check uses a global variable. Can you change it in the console?</p>
+        </div>
+    </div>
+    <script>
+        let user = "guest";
+        function checkUser() {
+            if (user === "admin") {
+                document.getElementById('result').classList.remove('hidden');
+            } else {
+                alert("Access Denied: You are currently " + user);
+            }
+        }
+    </script>
+</body>
+</html>

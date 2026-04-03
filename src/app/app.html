@@ -1,0 +1,117 @@
+<div class="min-h-screen bg-background text-on-surface font-sans pb-16 md:pb-0 cyber-grid relative overflow-hidden flex flex-col">
+  <!-- Desktop Layout (Hidden on Mobile) -->
+  <div class="hidden md:flex flex-col w-full min-h-screen">
+      <router-outlet></router-outlet>
+  </div>
+
+  <!-- Mobile Layout (Hidden on Desktop) -->
+  <div class="md:hidden flex flex-col w-full min-h-screen z-50 bg-[#0a0e17] overflow-y-auto">
+      
+      <!-- Scan to Sync Section (shown if isSynced === false) -->
+      <div *ngIf="!isSynced()" class="flex flex-col items-center justify-center p-6 h-screen relative">
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,163,255,0.1)_0%,transparent_70%)] pointer-events-none"></div>
+          <h1 class="text-4xl font-black font-display tracking-tighter text-[#00A3FF] uppercase mb-4 drop-shadow-[0_4px_0_rgba(0,0,0,0.5)]">Tactical Link</h1>
+          <p class="text-xs text-white opacity-60 uppercase tracking-widest mb-10 text-center leading-relaxed">Device Not Synced.<br>Scan QR Code from Desktop Terminal to access your Agent Profile.</p>
+          
+          <div class="w-full max-w-sm aspect-square bg-[#151925] border-4 border-[#00A3FF] rounded-2xl shadow-[0px_4px_0px_#00A3FF,0_0_20px_#00A3FF] overflow-hidden mb-12 relative flex items-center justify-center text-[#0a0e17]" id="reader">
+             <div *ngIf="!scannerRunning()" class="text-[#00A3FF] opacity-30 flex flex-col items-center pointer-events-none">
+                 <mat-icon class="text-5xl mb-2">qr_code_scanner</mat-icon>
+                 <span class="text-[10px] font-bold uppercase tracking-widest">Scanner Offline</span>
+             </div>
+          </div>
+          
+          <button (click)="startScanner()" *ngIf="!scannerRunning()" class="modern-button w-full text-center uppercase tracking-widest text-sm py-4 active:translate-y-1">Activate Scanner</button>
+      </div>
+
+      <!-- Progress Tracker Section (shown if isSynced === true) -->
+      <div *ngIf="isSynced()" class="flex flex-col p-6 pb-40">
+          
+          <!-- Agent Stats -->
+          <div class="flex items-center gap-5 mb-10 mt-6 relative z-10">
+              <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00A3FF] to-primary border-4 border-white flex items-center justify-center shadow-[0_4px_0_#003151,0_0_15px_#00A3FF] overflow-hidden relative">
+                  <mat-icon class="text-4xl text-white">person</mat-icon>
+                  <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30 blend-overlay pointer-events-none"></div>
+              </div>
+              <div class="flex-1">
+                  <h2 class="text-3xl font-black font-display text-white uppercase tracking-tighter">Byte</h2>
+                  <p class="text-[10px] text-primary bg-primary/10 inline-block px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-primary mt-1 mb-2">Tactical Operator</p>
+                  <p class="text-[10px] font-bold text-white uppercase tracking-widest opacity-80">XP: <span class="text-primary">{{ gameState.totalFlags() * 100 }}</span> • Flags: <span class="text-primary">{{ gameState.totalFlags() }}</span>/80</p>
+              </div>
+          </div>
+
+          <!-- Byte's Status -->
+          <div class="p-5 mb-10 border-2 border-[#b091ff] shadow-[0_4px_0_#b091ff,0_0_20px_rgba(176,145,255,0.1)] bg-surface-container-low rounded-2xl relative overflow-hidden">
+              <div class="absolute inset-0 bg-[linear-gradient(rgba(176,145,255,0.05)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none"></div>
+              <div class="flex items-center gap-3 mb-3 relative z-10">
+                 <div class="w-8 h-8 rounded-full border-2 border-[#00ff00] flex justify-center items-center bg-[#00ff00]/10 shadow-[0_0_10px_#00ff00]">
+                     <mat-icon class="text-[#00ff00] text-sm animate-pulse">check</mat-icon>
+                 </div>
+                 <p class="text-[10px] font-bold text-[#b091ff] tracking-widest uppercase">System Log: <span class="text-white">{{ gameState.byteMood() }}</span></p>
+              </div>
+              <p class="text-sm text-white italic opacity-90 leading-relaxed relative z-10">"{{ gameState.byteMessage() }}"</p>
+          </div>
+
+          <!-- Sector Progress -->
+          <h3 class="text-[10px] font-black font-display text-white uppercase tracking-[0.2em] mb-6 border-b border-outline-variant pb-2">Global Deployment Progress</h3>
+          <div class="space-y-6 flex flex-col relative z-10 w-full overflow-hidden">
+              <!-- Sector 1 -->
+              <div>
+                  <div class="flex justify-between text-xs font-bold text-white uppercase mb-2">
+                      <span class="tracking-widest flex items-center gap-2"><mat-icon class="text-[#00A3FF] text-[16px]">rocket_launch</mat-icon> Starter</span>
+                      <span class="text-primary">{{ sector1Solved() }}/20</span>
+                  </div>
+                  <div class="w-full bg-[#0a0e17] h-3 rounded-full overflow-hidden border border-outline-variant">
+                      <div class="h-full bg-gradient-to-r from-primary to-primary-dim shadow-[0_0_10px_#00A3FF] transition-all duration-500" [style.width]="(sector1Solved() / 20) * 100 + '%'"></div>
+                  </div>
+              </div>
+              <!-- Sector 2 -->
+              <div>
+                  <div class="flex justify-between text-xs font-bold text-white uppercase mb-2">
+                      <span class="tracking-widest flex items-center gap-2"><mat-icon class="text-[#b091ff] text-[16px]">keyboard</mat-icon> Input & Logic</span>
+                      <span class="text-[#b091ff]">{{ sector2Solved() }}/20</span>
+                  </div>
+                  <div class="w-full bg-[#0a0e17] h-3 rounded-full overflow-hidden border border-outline-variant">
+                      <div class="h-full bg-gradient-to-r from-[#bca2ff] to-[#b091ff] shadow-[0_0_10px_#b091ff] transition-all duration-500" [style.width]="(sector2Solved() / 20) * 100 + '%'"></div>
+                  </div>
+              </div>
+              <!-- Sector 3 -->
+              <div>
+                  <div class="flex justify-between text-xs font-bold text-white uppercase mb-2">
+                      <span class="tracking-widest flex items-center gap-2"><mat-icon class="text-[#ff9900] text-[16px]">radar</mat-icon> Web Attacks</span>
+                      <span class="text-[#ff9900]">{{ sector3Solved() }}/20</span>
+                  </div>
+                  <div class="w-full bg-[#0a0e17] h-3 rounded-full overflow-hidden border border-outline-variant">
+                      <div class="h-full bg-gradient-to-r from-[#ffb442] to-[#ff9900] shadow-[0_0_10px_#ff9900] transition-all duration-500" [style.width]="(sector3Solved() / 20) * 100 + '%'"></div>
+                  </div>
+              </div>
+              <!-- Sector 4 -->
+              <div>
+                  <div class="flex justify-between text-xs font-bold text-white uppercase mb-2">
+                      <span class="tracking-widest flex items-center gap-2"><mat-icon class="text-[#ff3333] text-[16px]">terminal</mat-icon> Hacker Mode</span>
+                      <span class="text-[#ff3333]">{{ sector4Solved() }}/20</span>
+                  </div>
+                  <div class="w-full bg-[#0a0e17] h-3 rounded-full overflow-hidden border border-outline-variant">
+                      <div class="h-full bg-gradient-to-r from-[#ff6666] to-[#ff3333] shadow-[0_0_10px_#ff3333] transition-all duration-500" [style.width]="(sector4Solved() / 20) * 100 + '%'"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <nav *ngIf="isSynced()" class="md:hidden blur-[0.5px] fixed bottom-0 left-0 right-0 bg-[#0a0e17]/90 backdrop-blur-lg border-t-[1px] border-outline-variant/30 py-4 px-6 z-[100] drop-shadow-[0_-5px_10px_rgba(0,0,0,0.5)]">
+      <div class="flex justify-around items-center max-w-sm mx-auto">
+        <a class="flex flex-col items-center bg-gradient-to-br from-[#00A3FF] to-primary text-white rounded-full px-6 py-2 shadow-[0_0_15px_rgba(0,163,255,0.4)] active:scale-95 transition-transform translate-y-[-10px] transform">
+            <mat-icon class="mb-1 text-[20px]">person</mat-icon>
+            <span class="text-[8px] font-display font-black uppercase tracking-[0.2em] mt-1 shrink-0">Agent</span>
+        </a>
+        <a class="flex flex-col items-center text-outline hover:text-white transition-colors p-2 active:scale-95 transition-transform shrink-0">
+            <mat-icon class="mb-1 text-[20px]">map</mat-icon>
+            <span class="text-[8px] font-display font-black uppercase tracking-[0.2em] mt-1 shrink-0">Map</span>
+        </a>
+        <a class="flex flex-col items-center text-outline hover:text-white transition-colors p-2 active:scale-95 transition-transform">
+            <mat-icon class="mb-1 text-[20px]">chat</mat-icon>
+            <span class="text-[8px] font-display font-black uppercase tracking-[0.2em] mt-1 shrink-0">Briefs</span>
+        </a>
+      </div>
+  </nav>
+</div>

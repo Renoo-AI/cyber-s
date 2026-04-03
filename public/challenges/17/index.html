@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 17 - Debug Param</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Debug Mode</h1>
+            <p>The application is running in production mode. Can you enable debug mode?</p>
+            <div id="status-info">
+                <div class="alert info">
+                    <strong>Status:</strong> Production Mode
+                </div>
+            </div>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Debug Enabled!</strong> The flag is: <span class="flag">FLAG{DEBUG_MODE_PARAMETER}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: Try adding a URL parameter like <code>?debug=true</code>.</p>
+        </div>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const debug = urlParams.get('debug');
+        
+        if (debug === 'true') {
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('status-info').innerHTML = `
+                <div class="alert success">
+                    <strong>Status:</strong> Debug Mode Enabled
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

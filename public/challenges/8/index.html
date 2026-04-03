@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 8 - Enable Button</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Disabled Action</h1>
+            <p>The button below is disabled. Can you enable it to get the flag?</p>
+            <div class="form-group">
+                <button id="flag-btn" class="modern-button" disabled onclick="revealFlag()">Get Flag</button>
+            </div>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Enabled!</strong> The flag is: <span class="flag">FLAG{BUTTON_ENABLED_VIA_DOM}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: Inspect the element and remove the 'disabled' attribute.</p>
+        </div>
+    </div>
+    <script>
+        function revealFlag() {
+            document.getElementById('result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

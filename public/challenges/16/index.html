@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 16 - B64 Cookie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Session Check</h1>
+            <p>Your session cookie is encoded. Can you decode it and change your role?</p>
+            <div id="user-info">
+                <div class="alert info">
+                    <strong>Status:</strong> Logged in as <span id="role-display" class="highlight">guest</span>
+                </div>
+            </div>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Admin Access!</strong> The flag is: <span class="flag">FLAG{BASE64_COOKIE_TAMPERING}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: The cookie 'session' is Base64 encoded. Decode it, change 'guest' to 'admin', and re-encode it.</p>
+        </div>
+    </div>
+    <script>
+        // Set initial cookie if not present
+        if (!document.cookie.includes('session=')) {
+            document.cookie = "session=" + btoa("role=guest") + "; path=/";
+        }
+
+        function checkSession() {
+            const cookies = document.cookie.split(';');
+            let session = '';
+            for (let c of cookies) {
+                if (c.trim().startsWith('session=')) {
+                    session = c.trim().split('=')[1];
+                }
+            }
+
+            try {
+                const decoded = atob(session);
+                const role = decoded.split('=')[1];
+                const roleDisplay = document.getElementById('role-display');
+                const result = document.getElementById('result');
+
+                if (role === 'admin') {
+                    roleDisplay.textContent = 'Administrator';
+                    result.classList.remove('hidden');
+                } else {
+                    roleDisplay.textContent = 'guest';
+                    result.classList.add('hidden');
+                }
+            } catch (e) {
+                // Invalid base64
+            }
+        }
+
+        setInterval(checkSession, 1000);
+        checkSession();
+    </script>
+</body>
+</html>

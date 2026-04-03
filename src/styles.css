@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #5eb4ff;
+  --color-primary-dim: #15a4ff;
+  --color-primary-fixed-dim: #00A3FF;
+  --color-primary-container: #2aa7ff;
+  --color-on-primary-container: #00A3FF;
+  
+  --color-success: #00ff00;
+  
+  --color-background: #0a0e17;
+  --color-surface-lowest: #0a0e17;
+  --color-surface: #0a0e17;
+  --color-surface-container-low: #0f131d;
+  --color-surface-container: #1a202c;
+  --color-surface-container-high: rgba(15, 19, 29, 0.8);
+  --color-surface-container-highest: #1f2937;
+  --color-on-surface: #ebedfb;
+  
+  --color-outline: #1f2937;
+  --color-outline-variant: rgba(31, 41, 55, 0.2);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold tracking-tight;
+  }
+}
+
+.modern-card {
+  @apply bg-surface-container border-4 border-outline rounded-[2rem] p-6 shadow-[0px_4px_0px_var(--color-surface-container-highest),_0px_0px_24px_rgba(94,180,255,0.06)] backdrop-blur-[10px] transition-all duration-200 hover:shadow-[0px_2px_0px_var(--color-surface-container-highest),_0px_0px_24px_rgba(94,180,255,0.1)];
+}
+
+.modern-button {
+  @apply px-4 py-2 bg-gradient-to-br from-primary to-primary-dim text-white rounded-[2rem] border-4 border-primary-container shadow-[0px_4px_0px_var(--color-surface-container-highest),_0px_0px_24px_rgba(94,180,255,0.06)] hover:shadow-[0px_2px_0px_var(--color-surface-container-highest),_0px_0px_24px_rgba(94,180,255,0.1)] transition-all duration-200 font-display font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed hover:translate-y-[2px];
+}
+
+.modern-button-secondary {
+  @apply px-4 py-2 bg-surface-container-low text-primary rounded-[2rem] hover:bg-surface-container transition-all duration-200 font-display font-bold text-lg;
+}
+
+.modern-button-tertiary {
+  @apply bg-transparent text-on-surface font-display text-sm tracking-[0.1em] uppercase hover:text-primary transition-all duration-200;
+}
+
+.modern-input {
+  @apply w-full bg-surface-lowest border-4 border-outline rounded-lg px-4 py-2 text-on-surface focus:outline-none focus:ring-0 focus:border-[#00A3FF] focus:shadow-[inset_0px_0px_10px_var(--color-primary-fixed-dim)] transition-all;
+}
+
+.modern-badge {
+  @apply px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary-container text-[#00A3FF];
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-surface;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-outline rounded-full hover:bg-primary-dim;
+}
+
+/* Cyber Grid Background */
+.cyber-grid {
+    background-color: #0a0e17;
+    background-image: 
+      linear-gradient(rgba(0, 163, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 163, 255, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    animation: gridScroll 20s linear infinite;
+}
+
+@keyframes gridScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 32px 32px; }
+}

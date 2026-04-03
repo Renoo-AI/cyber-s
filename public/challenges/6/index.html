@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 6 - Base64 Decode</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Encoded Token</h1>
+            <p>Your session token is encoded. Can you decode it to find the secret?</p>
+            <div class="alert info">
+                <strong>Token:</strong> <code id="token">cm9sZT1ndWVzdA==</code>
+            </div>
+            <p>The flag is hidden inside the decoded value if you can find the right string.</p>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Decoded!</strong> The flag is: <span class="flag">FLAG{BASE64_IS_NOT_ENCRYPTION}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // This is a simulation. In a real challenge, the user would decode it externally.
+        // But for the game to progress, we check if they "know" it.
+        // Actually, let's make it interactive.
+        const token = "cm9sZT1ndWVzdA==";
+        console.log("Hint: atob('" + token + "')");
+    </script>
+</body>
+</html>

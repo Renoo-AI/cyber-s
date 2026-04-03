@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 13 - MaxLength Bypass</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Input Restriction</h1>
+            <p>The input below is restricted to 5 characters. Can you enter 'administrator'?</p>
+            <div class="form-group">
+                <input type="text" id="long-input" maxlength="5" placeholder="Max 5 chars">
+            </div>
+            <button class="modern-button" onclick="checkInput()">Submit</button>
+            <div id="result" class="hidden">
+                <div class="alert success">
+                    <strong>Bypassed!</strong> The flag is: <span class="flag">FLAG{MAXLENGTH_IS_CLIENT_SIDE}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: Inspect the element and remove or increase the 'maxlength' attribute.</p>
+        </div>
+    </div>
+    <script>
+        function checkInput() {
+            const input = document.getElementById('long-input');
+            if (input.value === 'administrator') {
+                document.getElementById('result').classList.remove('hidden');
+            } else {
+                alert("Invalid input: Must be exactly 'administrator'");
+            }
+        }
+    </script>
+</body>
+</html>

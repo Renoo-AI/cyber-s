@@ -1,0 +1,123 @@
+const fs = require('fs');
+const path = require('path');
+
+const baseDir = 'c:/Users/Youssef/Desktop/Cybersec-main/public/challenges';
+
+const appendCSS = `
+/* --- High-End 3D Cartoonic Upgrades --- */
+
+/* Mesh Gradient Background for Body */
+body {
+    background-color: #0a0e17 !important;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 163, 255, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(0, 255, 128, 0.1) 0px, transparent 50%) !important;
+    color: #ebedfb !important;
+}
+
+/* Tactical Depth & Glowing Edges (Cards & Containers) */
+.card, .container > div, .challenge-container, form {
+    background: #151925 !important;
+    border: 4px solid #0a0e17 !important;
+    border-radius: 24px !important;
+    box-shadow: 
+        8px 8px 0px 0px #00A3FF, 
+        16px 16px 0px 0px rgba(0, 163, 255, 0.1),
+        inset 0 0 10px rgba(0, 163, 255, 0.5) !important;
+    color: #ebedfb !important;
+}
+
+/* The '3D Push' Effect for Buttons */
+button, .btn, input[type="submit"], input[type="button"] {
+    background-color: #00A3FF !important;
+    color: #fff !important;
+    border: 4px solid #0a0e17 !important;
+    border-bottom: 6px solid rgba(0,0,0,0.5) !important;
+    border-radius: 12px !important;
+    padding: 12px 24px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    transition: all 0.1s ease !important;
+    transform: translateY(0);
+    display: inline-block;
+}
+
+button:active, .btn:active, input[type="submit"]:active, input[type="button"]:active {
+    transform: translateY(4px) !important;
+    border-bottom: 2px solid rgba(0,0,0,0.5) !important;
+    margin-bottom: 4px !important;
+}
+
+/* Glowing Edges for Inputs */
+input[type="text"], input[type="password"], textarea, select {
+    background: #0f131d !important;
+    border: 4px solid #0a0e17 !important;
+    border-radius: 12px !important;
+    box-shadow: inset 0 0 10px rgba(0, 163, 255, 0.5) !important;
+    color: #ebedfb !important;
+    padding: 12px !important;
+    outline: none !important;
+}
+
+input:focus, textarea:focus {
+    border-color: #00A3FF !important;
+}
+
+/* Byte's HUD (Holographic UI) / Hints */
+.hint-box, .alert, .byte-hud, .info {
+    background: rgba(0, 163, 255, 0.05) !important;
+    border: 2px solid #00A3FF !important;
+    border-radius: 12px !important;
+    color: #00A3FF !important;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 15px rgba(0, 163, 255, 0.2) !important;
+}
+
+.hint-box::before, .alert::before, .byte-hud::before, .info::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, transparent, rgba(0, 163, 255, 0.2), transparent);
+    animation: scanline 3s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes scanline {
+    0% { top: -100%; }
+    100% { top: 200%; }
+}
+
+.alert.success, .success {
+    background: rgba(0, 255, 128, 0.05) !important;
+    border: 2px solid #00ff00 !important;
+    color: #00ff00 !important;
+    box-shadow: 0 0 15px rgba(0, 255, 128, 0.2) !important;
+}
+
+.flag {
+    background: #0a0e17 !important;
+    border: 2px solid #00ff00 !important;
+    color: #00ff00 !important;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3) !important;
+}
+`;
+
+for (let i = 1; i <= 10; i++) {
+    const stylePath = path.join(baseDir, i.toString(), 'style.css');
+    if (fs.existsSync(stylePath)) {
+        let content = fs.readFileSync(stylePath, 'utf8');
+        if (!content.includes('/* --- High-End 3D Cartoonic Upgrades --- */')) {
+            fs.appendFileSync(stylePath, '\n' + appendCSS);
+            console.log("Updated " + stylePath);
+        } else {
+            console.log("Already up to date " + stylePath);
+        }
+    } else {
+        console.log("Not found: " + stylePath);
+    }
+}

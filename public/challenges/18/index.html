@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 18 - Display None</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Hidden Content</h1>
+            <p>The flag is right here, but it's hidden with CSS. Can you find it?</p>
+            <div class="secret-container" style="display: none;">
+                <div class="alert success">
+                    <strong>Visible!</strong> The flag is: <span class="flag">FLAG{CSS_DISPLAY_NONE_BYPASS}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: Use the inspector to find the element with <code>display: none</code> and change it to <code>block</code>.</p>
+        </div>
+    </div>
+</body>
+</html>

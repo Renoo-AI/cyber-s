@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 12 - Reveal Div</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Hidden Secret</h1>
+            <p>There is a secret hidden on this page that is not visible. Can you reveal it?</p>
+            <div id="secret-div" class="hidden-secret">
+                <div class="alert success">
+                    <strong>Found it!</strong> The flag is: <span class="flag">FLAG{DISPLAY_NONE_REVEALED}</span>
+                </div>
+            </div>
+            <p class="hint">Tip: Inspect the elements and look for a div with 'display: none'.</p>
+        </div>
+    </div>
+</body>
+</html>
