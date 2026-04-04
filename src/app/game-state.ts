@@ -644,26 +644,35 @@ export class GameStateService {
 
   // Session Sync Infrastructure
   sessionId = signal<string>(crypto.randomUUID());
+  isLinked = signal<boolean>(false);
   
   generateSyncPayload(): string {
-    return `${this.sessionId()}|${this.solvedChallenges().join(',')}`;
+    const payloadObj = {
+      sid: this.sessionId(),
+      ts: Date.now(),
+      ver: '1.0',
+      flags: this.solvedChallenges()
+    };
+    return btoa(JSON.stringify(payloadObj));
   }
   
   syncDevice(payload: string) {
-    if (payload.includes('|')) {
-       const parts = payload.split('|');
-       const id = parts[0];
-       const data = parts[1];
+    try {
+       const decoded = atob(payload);
+       const data = JSON.parse(decoded);
        
-       if (id) {
-           const solved = data ? data.split(',').map(n => parseInt(n, 10)) : [];
+       if (data.sid && data.ver === '1.0') {
+           const solved = data.flags && Array.isArray(data.flags) ? data.flags : [];
            this.solvedChallenges.set(solved);
+           this.isLinked.set(true);
            this.byteMood.set('excited');
-           this.byteMessage.set(`Successfully synchronized with Tactical Node [${id.substring(0,8)}]. Link established.`);
+           this.byteMessage.set(`Successfully synchronized with Tactical Node [${data.sid.substring(0,8)}]. Link established.`);
            this.playBeep(880, 'sine', 0.1);
            setTimeout(() => this.playBeep(1760, 'square', 0.2), 100);
            return;
        }
+    } catch(e) {
+       console.error("Payload decryption failed:", e);
     }
     // Error state
     this.byteMood.set('idle');

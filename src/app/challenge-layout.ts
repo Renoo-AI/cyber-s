@@ -61,8 +61,8 @@ import {CHALLENGES, GameStateService} from './game-state';
         </nav>
 
         <!-- Byte AI Companion (Sidebar Bottom) -->
-        <div class="p-6 bg-white border-t border-ui-border mt-auto shadow-[0_-4px_12px_rgba(0,0,0,0.02)]">
-          <div class="flex items-center gap-3 mb-4">
+        <div [ngClass]="gameState.currentChallengeId() >= 21 ? 'p-3 bg-[#1e1e1e] border-t border-[#333] mt-auto shadow-none text-green-400 font-mono text-[10px]' : 'p-6 bg-white border-t border-ui-border mt-auto shadow-[0_-4px_12px_rgba(0,0,0,0.02)]'">
+          <div *ngIf="gameState.currentChallengeId() < 21" class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-2xl bg-brand-primary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-primary/20">
               B
             </div>
@@ -71,9 +71,12 @@ import {CHALLENGES, GameStateService} from './game-state';
               <div class="text-[10px] text-ui-muted uppercase tracking-wider font-semibold">AI Mentor</div>
             </div>
           </div>
-          <div class="p-3 bg-ui-sidebar rounded-xl border border-ui-border">
-            <p class="text-[11px] leading-relaxed text-ui-muted italic">
-              "{{ gameState.byteMessage() }}"
+          <div *ngIf="gameState.currentChallengeId() >= 21" class="flex items-center gap-2 mb-2 uppercase tracking-widest text-[#888]">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Remote Handler
+          </div>
+          <div [ngClass]="gameState.currentChallengeId() >= 21 ? 'p-2 bg-black border border-[#333] rounded' : 'p-3 bg-ui-sidebar rounded-xl border border-ui-border'">
+            <p [ngClass]="gameState.currentChallengeId() >= 21 ? 'text-[10px] leading-tight text-green-400' : 'text-[11px] leading-relaxed text-ui-muted italic'">
+              <span *ngIf="gameState.currentChallengeId() >= 21">> </span>"{{ gameState.byteMessage() }}"<span *ngIf="gameState.currentChallengeId() >= 21" class="animate-pulse">_</span>
             </p>
           </div>
         </div>

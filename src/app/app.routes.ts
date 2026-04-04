@@ -10,7 +10,7 @@ export const desktopOnlyGuard: CanActivateFn = () => {
     if (isMobile) {
         const router = inject(Router);
         const gameState = inject(GameStateService);
-        gameState.byteMood.set('confused');
+        gameState.byteMood.set('thinking');
         gameState.byteMessage.set('Agent, this node requires a Full Desktop Terminal for exploitation.');
         return router.parseUrl('/');
     }

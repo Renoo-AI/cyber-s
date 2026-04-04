@@ -14,6 +14,11 @@
           <p class="text-xs text-white opacity-60 uppercase tracking-widest mb-10 text-center leading-relaxed">Device Not Synced.<br>Scan QR Code from Desktop Terminal to access your Agent Profile.</p>
           
           <div class="w-full max-w-sm aspect-square bg-[#151925] border-4 border-[#00A3FF] rounded-2xl shadow-[0px_4px_0px_#00A3FF,0_0_20px_#00A3FF] overflow-hidden mb-12 relative flex items-center justify-center text-[#0a0e17]" id="reader">
+             <!-- Digital Viewfinder Frame -->
+             <div class="absolute inset-4 border-2 border-dashed border-[#00A3FF]/40 rounded-lg pointer-events-none"></div>
+             <!-- Scanning Laser -->
+             <div *ngIf="scannerRunning()" class="absolute top-0 left-0 w-full h-[2px] bg-[#00ff00] shadow-[0_0_15px_#00ff00] pointer-events-none animate-[scanline_2s_linear_infinite]"></div>
+
              <div *ngIf="!scannerRunning()" class="text-[#00A3FF] opacity-30 flex flex-col items-center pointer-events-none">
                  <mat-icon class="text-5xl mb-2">qr_code_scanner</mat-icon>
                  <span class="text-[10px] font-bold uppercase tracking-widest">Scanner Offline</span>
@@ -25,11 +30,11 @@
 
       <!-- Glitch Transition Overlay (shown during syncAnimating) -->
       <div *ngIf="syncAnimating()" class="flex flex-col items-center justify-center p-6 h-screen relative z-[100] bg-black overflow-hidden pointer-events-none">
-          <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/l41JUKbg81H5bXFzG/giphy.gif')] opacity-20 mix-blend-screen bg-cover bg-center"></div>
+          <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/l41JUKbg81H5bXFzG/giphy.gif')] opacity-20 bg-cover bg-center"></div>
           <div class="absolute inset-0" style="background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);"></div>
           
-          <h1 class="text-5xl font-black font-display text-white uppercase tracking-tighter mix-blend-difference z-10 glitch-text animate-pulse">Syncing...</h1>
-          <p class="text-primary text-xs uppercase tracking-[0.3em] mt-4 font-bold animate-bounce z-10">P2P Payload Detected</p>
+          <h1 class="text-3xl font-black font-display text-white uppercase tracking-tighter z-10 glitch-text animate-pulse text-center">SYNC COMPLETE</h1>
+          <p class="text-primary text-xs uppercase tracking-[0.2em] mt-4 font-bold animate-bounce z-10 text-center">ACCESSING AGENT DATA</p>
           
           <div class="w-full h-1 bg-primary/30 mt-8 relative overflow-hidden">
              <div class="absolute left-0 h-full bg-[#00ff00] w-full animate-[progress_1.2s_ease-in-out_forwards]"></div>
