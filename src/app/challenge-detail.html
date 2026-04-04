@@ -54,7 +54,7 @@
   </div>
 
   <!-- Interactive Area -->
-  <div class="modern-card min-h-[500px] flex flex-col overflow-hidden p-0 border-2 border-ui-border shadow-xl">
+  <div [ngClass]="currentChallenge().id >= 21 ? 'bg-white min-h-[500px] flex flex-col overflow-hidden p-0 border border-gray-200 shadow-sm rounded-lg' : 'modern-card min-h-[500px] flex flex-col overflow-hidden p-0 border-2 border-ui-border shadow-xl'">
     <div class="bg-ui-sidebar px-6 py-3 border-b border-ui-border flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="flex gap-1.5">
