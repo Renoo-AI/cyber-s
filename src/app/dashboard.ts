@@ -154,12 +154,23 @@ import {CHALLENGES, GameStateService} from './game-state';
       <div *ngIf="isModalOpen()" class="fixed inset-0 z-[100] flex items-center justify-center backdrop-blur-xl bg-[#0a0e17]/80">
         <div class="modern-card p-10 max-w-sm w-full mx-4 relative overflow-hidden bg-[#151925] border-4 border-[#00A3FF] shadow-[0_0_40px_rgba(0,163,255,0.4)] flex flex-col items-center text-center">
             <button (click)="closeLinkModal()" class="absolute top-4 right-4 text-[#00A3FF] hover:text-white transition-colors"><mat-icon>close</mat-icon></button>
-            <h3 class="text-2xl font-display font-black text-white uppercase mb-1">Tactical Link</h3>
-            <p class="text-[10px] tracking-widest text-[#00A3FF] uppercase mb-8">Scan from mobile terminal</p>
-            <div class="p-2 bg-white rounded-lg mb-6 shadow-inner">
-                <canvas id="qrcode-canvas" class="w-full"></canvas>
-            </div>
-            <p class="text-[10px] text-white opacity-40 uppercase tracking-widest truncate w-full">{{ gameState.sessionId() }}</p>
+
+            <ng-container *ngIf="!gameState.isLinked()">
+                <h3 class="text-2xl font-display font-black text-white uppercase mb-1">Tactical Link</h3>
+                <p class="text-[10px] tracking-widest text-[#00A3FF] uppercase mb-8">Scan from mobile terminal</p>
+                <div class="p-2 bg-white rounded-lg mb-6 shadow-inner">
+                    <canvas id="qrcode-canvas" class="w-full"></canvas>
+                </div>
+                <p class="text-[10px] text-white opacity-40 uppercase tracking-widest truncate w-full">{{ gameState.sessionId() }}</p>
+            </ng-container>
+
+            <ng-container *ngIf="gameState.isLinked()">
+                <div class="flex flex-col items-center justify-center py-8 glitch-text animate-pulse">
+                    <mat-icon class="text-6xl text-[#00ff00] mb-4 drop-shadow-[0_0_15px_#00ff00]">devices</mat-icon>
+                    <h3 class="text-3xl font-display font-black text-[#00ff00] uppercase mb-2 text-center drop-shadow-[0_2px_0_rgba(0,0,0,0.8)]">MOBILE LINKED</h3>
+                    <p class="text-[10px] tracking-[0.3em] text-white font-bold uppercase text-center mt-2">P2P Connection Secure</p>
+                </div>
+            </ng-container>
         </div>
       </div>
 
