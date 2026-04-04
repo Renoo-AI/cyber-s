@@ -1,0 +1,178 @@
+/* UNIFIED ENTERPRISE CSS - GPU STABILIZED */
+/* Palette Glitch Fix: Hardware Acceleration + Color Isolation */
+
+:root {
+    --brand-primary: #0066FF;
+    --brand-secondary: #F0F7FF;
+    --ui-bg: #f9fafb;
+    --ui-text: #1E293B;
+    --ui-muted: #64748B;
+    --ui-border: #E2E8F0;
+    --enterprise-bg: #0a0e17;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--enterprise-bg) !important;
+    color: var(--ui-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    isolation: isolate;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.card {
+    background: #0a0e17 !important;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid #1f2937;
+    text-align: center;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    letter-spacing: -0.025em;
+    color: #ebedfb;
+}
+
+p {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #94a3b8;
+}
+
+.highlight {
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+.admin-highlight {
+    color: #10B981;
+    font-weight: 700;
+}
+
+.hidden {
+    display: none;
+}
+
+.alert {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    text-align: left;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.alert.info {
+    background-color: rgba(30, 58, 138, 0.2);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.alert.success {
+    background-color: rgba(6, 95, 70, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.flag {
+    display: block;
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: #34d399;
+    word-break: break-all;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+button, .btn, input[type="submit"], input[type="button"] {
+    background-color: #0066FF;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+button:hover, .btn:hover, input[type="submit"]:hover, input[type="button"]:hover {
+    background-color: #0052cc;
+}
+
+button:active, .btn:active, input[type="submit"]:active, input[type="button"]:active {
+    transform: translateY(1px);
+}
+
+input[type="text"], input[type="password"], textarea, select {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    color: #ebedfb;
+    padding: 12px;
+    outline: none;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+input:focus, textarea:focus {
+    border-color: #0066FF;
+    box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+}
+
+form {
+    background: #0a0e17 !important;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.challenge-container, .container > div {
+    background: #0a0e17 !important;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.hint-box, .byte-hud, .info {
+    background: rgba(0, 102, 255, 0.1);
+    border: 1px solid rgba(0, 102, 255, 0.3);
+    border-radius: 12px;
+    color: #60a5fa;
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
