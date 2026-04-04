@@ -3,41 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge 21 - LocalStorage Secret</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Challenge 21 - IDOR Vulnerability | Admin Portal</title>
+    <link rel="stylesheet" href="../enterprise-base.css">
+    <style>
+        /* Challenge-specific overrides */
+        body {
+            background-color: #f9fafb;
+            align-items: flex-start;
+            padding-top: 40px;
+        }
+        
+        .admin-panel {
+            max-width: 900px;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .panel-title-group h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+        }
+        
+        .panel-subtitle {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .settings-section {
+            margin-bottom: 32px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+        
+        .user-id-display {
+            background: #f3f4f6;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #fef3c7;
+            color: #d97706;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .security-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card" style="text-align: left;">
-            <h1 style="border-bottom: 1px solid #E2E8F0; padding-bottom: 16px; margin-bottom: 24px;">Admin Portal | User Profile</h1>
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-                <div>
-                    <label style="font-weight: 600; font-size: 14px; color: #64748B;">Full Name</label>
-                    <input type="text" value="System Administrator" disabled style="width: 100%; padding: 10px; border: 1px solid #E2E8F0; border-radius: 8px; background: #F8FAFC; margin-top: 4px;">
+    <div class="container admin-panel">
+        <div class="card">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <h1>User Settings</h1>
+                    <p class="panel-subtitle">Manage your account preferences and security settings</p>
                 </div>
-                <div>
-                    <label style="font-weight: 600; font-size: 14px; color: #64748B;">Corporate Email</label>
-                    <input type="email" value="admin@internal-corp.local" disabled style="width: 100%; padding: 10px; border: 1px solid #E2E8F0; border-radius: 8px; background: #F8FAFC; margin-top: 4px;">
+                <div class="user-avatar">SA</div>
+            </div>
+            
+            <div class="security-badge" style="margin-bottom: 24px;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                Session: user_id=21 | Role: Standard User
+            </div>
+            
+            <div class="settings-section">
+                <h3 class="section-title">Account Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" value="System Administrator" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Corporate Email</label>
+                        <input type="email" id="email" value="admin@internal-corp.local" disabled>
+                    </div>
                 </div>
-                <div>
-                    <label style="font-weight: 600; font-size: 14px; color: #64748B;">Role Authorization Level</label>
-                    <input type="text" value="Level 9 (Global Access)" disabled style="width: 100%; padding: 10px; border: 1px solid #E2E8F0; border-radius: 8px; background: #F8FAFC; margin-top: 4px;">
+                
+                <div class="form-row single">
+                    <div class="form-group">
+                        <label for="user-id">User ID (Internal Reference)</label>
+                        <div class="user-id-display" id="user-id">UID-21</div>
+                        <p class="text-small text-muted" style="margin-top: 6px;">This ID is used for internal system references</p>
+                    </div>
                 </div>
-                <div style="margin-top: 16px;">
-                    <button style="background: #0066FF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: not-allowed; opacity: 0.7;">Save Changes</button>
-                    <p style="font-size: 12px; color: #64748B; margin-top: 8px;">Notice: Profile modifications require physical biometric confirmation.</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="role">Role Authorization Level</label>
+                        <input type="text" id="role" value="Level 5 (Standard Access)" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" value="IT Operations" disabled>
+                    </div>
                 </div>
             </div>
-            <div id="result" class="hidden">
-                <div class="alert success" style="margin-top: 24px;">
-                    <strong>Session Token Validated:</strong> <span class="flag">FLAG{LOCAL_STORAGE_SECRET}</span>
+            
+            <div class="settings-section">
+                <h3 class="section-title">Session Details</h3>
+                
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Session Token</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Last Activity</td>
+                                <td id="last-activity">Just now</td>
+                            </tr>
+                            <tr>
+                                <td>IP Address</td>
+                                <td>192.168.1.105</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+            
+            <div id="result" class="hidden">
+                <div class="alert alert-success">
+                    <strong>Access Granted:</strong> Administrative data exposed via IDOR vulnerability.
+                    <span class="flag">FLAG{IDOR_USER_ENUMERATION_SUCCESS}</span>
+                </div>
+            </div>
+            
+            <div class="action-bar">
+                <button class="btn btn-secondary" disabled>Cancel</button>
+                <button class="btn btn-primary" onclick="checkVulnerability()">Update Profile</button>
+            </div>
+            
+            <div class="hint">
+                <strong>Note:</strong> This panel uses user_id parameter for data retrieval. Consider what happens if you modify this value.
             </div>
         </div>
     </div>
+    
     <script>
-        // Store sensitive session token silently
-        localStorage.setItem('auth_session_token', 'FLAG{LOCAL_STORAGE_SECRET}');
+        // Store session token in localStorage (vulnerable pattern)
+        const sessionData = {
+            user_id: 21,
+            role: 'standard',
+            auth_token: 'FLAG{IDOR_USER_ENUMERATION_SUCCESS}'
+        };
+        localStorage.setItem('session_data', JSON.stringify(sessionData));
+        
+        function checkVulnerability() {
+            // Simulate IDOR vulnerability check
+            const userIdParam = new URLSearchParams(window.location.search).get('user_id');
+            const resultDiv = document.getElementById('result');
+            
+            if (userIdParam && userIdParam !== '21') {
+                // User tried to access another user's data
+                resultDiv.classList.remove('hidden');
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                // Normal behavior - show info alert
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'alert alert-info';
+                infoDiv.innerHTML = '<strong>Profile Updated:</strong> Your changes have been saved successfully.';
+                infoDiv.style.marginTop = '16px';
+                
+                const actionBar = document.querySelector('.action-bar');
+                const existingInfo = actionBar.parentElement.querySelector('.alert-info');
+                if (existingInfo) {
+                    existingInfo.remove();
+                }
+                actionBar.parentElement.insertBefore(infoDiv, actionBar);
+            }
+        }
+        
+        // Update last activity time
+        document.getElementById('last-activity').textContent = new Date().toLocaleTimeString();
     </script>
 </body>
 </html>

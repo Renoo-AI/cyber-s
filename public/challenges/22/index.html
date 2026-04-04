@@ -3,27 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge 22 - SessionStorage Flag</title>
-    <link rel="stylesheet" href="style.css">
+    <title>API Gateway - Request Monitor</title>
+    <link rel="stylesheet" href="../unified-enterprise.css">
+    <link rel="stylesheet" href="../tactical-overlay.css">
+    <style>
+        :root {
+            --api-bg: #0f172a;
+            --api-panel: #1e293b;
+            --api-border: #334155;
+            --api-text: #e2e8f0;
+            --api-muted: #94a3b8;
+            --api-success: #10b981;
+            --api-warning: #f59e0b;
+            --api-error: #ef4444;
+            --api-accent: #3b82f6;
+        }
+        
+        body {
+            background-color: var(--api-bg) !important;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        .api-console {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--api-panel);
+            border-radius: 12px 12px 0 0;
+            border-bottom: 1px solid var(--api-border);
+        }
+        
+        .console-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--api-success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .console-title h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--api-text);
+            margin: 0;
+            letter-spacing: 0;
+        }
+        
+        .connection-status {
+            font-size: 12px;
+            color: var(--api-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .console-body {
+            background: var(--api-panel);
+            border-radius: 0 0 12px 12px;
+            border: 1px solid var(--api-border);
+            overflow: hidden;
+        }
+        
+        .request-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 400px;
+        }
+        
+        .request-log, .response-viewer {
+            padding: 20px;
+            border-right: 1px solid var(--api-border);
+        }
+        
+        .response-viewer {
+            border-right: none;
+        }
+        
+        .panel-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--api-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .request-item {
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .request-item:hover {
+            border-color: var(--api-accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .request-item.active {
+            border-color: var(--api-accent);
+            background: rgba(59, 130, 246, 0.15);
+        }
+        
+        .request-method {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 8px;
+        }
+        
+        .method-get { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .method-post { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .method-put { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .method-delete { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        
+        .request-path {
+            font-size: 13px;
+            color: var(--api-text);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .request-time {
+            font-size: 11px;
+            color: var(--api-muted);
+            margin-top: 4px;
+        }
+        
+        .response-container {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--api-text);
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .json-key { color: #60a5fa; }
+        .json-string { color: #34d399; }
+        .json-number { color: #fbbf24; }
+        .json-boolean { color: #f472b6; }
+        
+        .debug-panel {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            border: 1px solid var(--api-border);
+        }
+        
+        .debug-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--api-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .debug-toggle {
+            padding: 4px 12px;
+            background: var(--api-panel);
+            border: 1px solid var(--api-border);
+            border-radius: 4px;
+            color: var(--api-muted);
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .debug-toggle:hover {
+            border-color: var(--api-accent);
+            color: var(--api-text);
+        }
+        
+        .hidden-debug {
+            display: none;
+        }
+        
+        .flag-revealed {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        
+        .flag-code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--api-success);
+            font-weight: 700;
+            word-break: break-all;
+        }
+        
+        .alert.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <h1>Session Secrets</h1>
-            <p>The application stores a secret in your browser's session storage. Can you find it?</p>
-            <div class="alert info">
-                <strong>Check SessionStorage!</strong> Open DevTools (F12), go to the 'Application' tab, and look under 'Session Storage'.
+    <div class="api-console">
+        <div class="console-header">
+            <div class="console-title">
+                <div class="status-indicator"></div>
+                <h1>API GATEWAY MONITOR v2.4.1</h1>
             </div>
-            <div id="result" class="hidden">
-                <div class="alert success">
-                    <strong>Found!</strong> The flag is: <span class="flag">FLAG{SESSION_STORAGE_SECRET}</span>
+            <div class="connection-status">
+                <span>LIVE</span>
+                <span>•</span>
+                <span>ws://api.internal:8443/stream</span>
+            </div>
+        </div>
+        
+        <div class="console-body">
+            <div class="request-panel">
+                <div class="request-log">
+                    <div class="panel-header">
+                        <span>Incoming Requests</span>
+                        <span class="request-count">24 requests/min</span>
+                    </div>
+                    
+                    <div class="request-item" onclick="selectRequest(0)">
+                        <span class="request-method method-get">GET</span>
+                        <span class="request-path">/api/v1/users/profile</span>
+                        <div class="request-time">142ms • 200 OK</div>
+                    </div>
+                    
+                    <div class="request-item" onclick="selectRequest(1)">
+                        <span class="request-method method-post">POST</span>
+                        <span class="request-path">/api/v1/auth/login</span>
+                        <div class="request-time">89ms • 200 OK</div>
+                    </div>
+                    
+                    <div class="request-item active" onclick="selectRequest(2)">
+                        <span class="request-method method-get">GET</span>
+                        <span class="request-path">/api/v1/admin/config</span>
+                        <div class="request-time">234ms • 200 OK</div>
+                    </div>
+                    
+                    <div class="request-item" onclick="selectRequest(3)">
+                        <span class="request-method method-put">PUT</span>
+                        <span class="request-path">/api/v1/users/settings</span>
+                        <div class="request-time">156ms • 200 OK</div>
+                    </div>
+                    
+                    <div class="request-item" onclick="selectRequest(4)">
+                        <span class="request-method method-delete">DELETE</span>
+                        <span class="request-path">/api/v1/sessions/active</span>
+                        <div class="request-time">67ms • 204 No Content</div>
+                    </div>
+                </div>
+                
+                <div class="response-viewer">
+                    <div class="panel-header">
+                        <span>Response Body</span>
+                        <span>JSON</span>
+                    </div>
+                    
+                    <div class="response-container" id="responseViewer">
+                        <div id="jsonContent"></div>
+                    </div>
+                    
+                    <div class="debug-panel">
+                        <div class="debug-header">
+                            <span>🔧 Debug Mode</span>
+                            <button class="debug-toggle" onclick="toggleDebug()">Show Internal Logs</button>
+                        </div>
+                        <div id="debugContent" class="hidden-debug">
+                            <div style="font-size: 11px; color: var(--api-muted); margin-bottom: 8px;">
+                                Internal server logs revealed...
+                            </div>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.5;">
+                                <div>[DEBUG] Config loaded from /etc/api/config.json</div>
+                                <div>[DEBUG] Environment: PRODUCTION</div>
+                                <div>[WARN] Hardcoded credentials detected in legacy module</div>
+                                <div class="flag-revealed">
+                                    [SECURITY FLAG] <span class="flag-code">FLAG{API_TAMPER_DEBUG_LOGS}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <p class="hint">Tip: Session storage is similar to local storage but only lasts for the duration of the page session.</p>
+        </div>
+        
+        <div class="alert info" style="margin-top: 20px; border-radius: 12px;">
+            <strong>Intel:</strong> Legacy admin endpoints may expose debug information. Check internal logs for configuration details.
         </div>
     </div>
+    
+    <!-- Byte Tactical Overlay -->
+    <div class="byte-tactical">
+        <div class="byte-header">
+            <span class="byte-identifier">BYTE // REMOTE HANDLER</span>
+            <div class="byte-controls">
+                <span class="scanline-indicator"></span>
+            </div>
+        </div>
+        <div class="byte-content">
+            <div class="intel-briefing">
+                <div class="intel-label">INTEL BRIEFING // LEVEL 22</div>
+                <p>Target: API Gateway Management Console</p>
+                <p>Vulnerability: Improper debug log exposure in production environment</p>
+                <p>Objective: Access internal debug logs to retrieve security flag</p>
+                <p class="intel-hint">Hint: Debug toggles often bypass access controls. Look for the "Show Internal Logs" button.</p>
+            </div>
+        </div>
+        <div class="byte-footer">
+            <span class="clearance-level">CLEARANCE: RESTRICTED</span>
+        </div>
+    </div>
+
     <script>
-        sessionStorage.setItem('flag', 'FLAG{SESSION_STORAGE_SECRET}');
+        const responses = [
+            { status: 200, data: { user: { id: 1847, name: "alex.chen", email: "alex@company.com", role: "user" } } },
+            { status: 200, data: { success: true, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", expires: 3600 } },
+            { status: 200, data: { config: { apiVersion: "2.4.1", maxRequests: 1000, debugMode: false, adminKey: "sk_admin_x7k9p2" } } },
+            { status: 200, data: { updated: true, settings: { theme: "dark", notifications: true } } },
+            { status: 204, data: null }
+        ];
+        
+        let currentSelection = 2;
+        
+        function selectRequest(index) {
+            currentSelection = index;
+            document.querySelectorAll('.request-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+            
+            const response = responses[index];
+            renderJSON(response.data);
+        }
+        
+        function renderJSON(data) {
+            if (data === null) {
+                document.getElementById('jsonContent').innerHTML = '<span style="color: var(--api-muted);">No content (204)</span>';
+                return;
+            }
+            
+            const jsonStr = JSON.stringify(data, null, 2);
+            const highlighted = jsonStr.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                let cls = 'json-number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+            
+            document.getElementById('jsonContent').innerHTML = highlighted;
+        }
+        
+        function toggleDebug() {
+            const debugContent = document.getElementById('debugContent');
+            const toggleBtn = document.querySelector('.debug-toggle');
+            
+            if (debugContent.classList.contains('hidden-debug')) {
+                debugContent.classList.remove('hidden-debug');
+                toggleBtn.textContent = 'Hide Internal Logs';
+            } else {
+                debugContent.classList.add('hidden-debug');
+                toggleBtn.textContent = 'Show Internal Logs';
+            }
+        }
+        
+        // Initialize with selected request
+        selectRequest(2);
     </script>
 </body>
 </html>

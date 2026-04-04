@@ -1,0 +1,187 @@
+/* 
+ * TACTICAL OVERLAY - Byte's Intel Briefing System
+ * Minimalist, Translucent, Discreet HUD for Levels 21+
+ */
+
+:root {
+    --tactical-bg: rgba(17, 24, 39, 0.95);
+    --tactical-border: rgba(55, 65, 81, 0.8);
+    --tactical-text: #e5e7eb;
+    --tactical-muted: #9ca3af;
+    --tactical-accent: #3b82f6;
+    --tactical-success: #10b981;
+    --tactical-warning: #f59e0b;
+    --tactical-danger: #ef4444;
+}
+
+/* Byte Tactical Container */
+.byte-tactical {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 340px;
+    max-width: calc(100vw - 40px);
+    background: var(--tactical-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--tactical-border);
+    border-radius: 8px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    overflow: hidden;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Tactical Header */
+.byte-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(55, 65, 81, 0.5);
+    border-bottom: 1px solid var(--tactical-border);
+}
+
+.byte-identifier {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--tactical-text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.byte-controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.scanline-indicator {
+    width: 6px;
+    height: 6px;
+    background: var(--tactical-success);
+    border-radius: 50%;
+    animation: scanline-pulse 1.5s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--tactical-success);
+}
+
+@keyframes scanline-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.9); }
+}
+
+/* Tactical Content - Terminal Style */
+.byte-content {
+    padding: 14px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+/* Intel Briefing Terminal */
+.intel-briefing {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--tactical-border);
+    border-radius: 6px;
+    padding: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.intel-label {
+    display: block;
+    color: var(--tactical-accent);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--tactical-border);
+}
+
+.intel-briefing p {
+    color: var(--tactical-text);
+    margin: 0 0 10px 0;
+}
+
+.intel-briefing p:last-child {
+    margin-bottom: 0;
+}
+
+.intel-hint {
+    color: var(--tactical-muted);
+    font-style: italic;
+    font-size: 11px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--tactical-border);
+}
+
+/* Tactical Footer */
+.byte-footer {
+    padding: 8px 14px;
+    background: rgba(55, 65, 81, 0.3);
+    border-top: 1px solid var(--tactical-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clearance-level {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--tactical-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Tactical Scrollbar */
+.byte-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.byte-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.byte-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.byte-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Fade In Animation */
+@keyframes byte-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.byte-tactical {
+    animation: byte-fade-in 300ms ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .byte-tactical {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-width: none;
+    }
+}
