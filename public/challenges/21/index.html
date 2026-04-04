@@ -8,22 +8,36 @@
 </head>
 <body>
     <div class="container">
-        <div class="card">
-            <h1>Storage Secrets</h1>
-            <p>The application stores a secret in your browser's local storage. Can you find it?</p>
-            <div class="alert info">
-                <strong>Check LocalStorage!</strong> Open DevTools (F12), go to the 'Application' tab, and look under 'Local Storage'.
-            </div>
-            <div id="result" class="hidden">
-                <div class="alert success">
-                    <strong>Found!</strong> The flag is: <span class="flag">FLAG{LOCAL_STORAGE_SECRET}</span>
+        <div class="card" style="text-align: left;">
+            <h1 style="border-bottom: 1px solid #E2E8F0; padding-bottom: 16px; margin-bottom: 24px;">Admin Portal | User Profile</h1>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label style="font-weight: 600; font-size: 14px; color: #64748B;">Full Name</label>
+                    <input type="text" value="System Administrator" disabled style="width: 100%; padding: 10px; border: 1px solid #E2E8F0; border-radius: 8px; background: #F8FAFC; margin-top: 4px;">
+                </div>
+                <div>
+                    <label style="font-weight: 600; font-size: 14px; color: #64748B;">Corporate Email</label>
+                    <input type="email" value="admin@internal-corp.local" disabled style="width: 100%; padding: 10px; border: 1px solid #E2E8F0; border-radius: 8px; background: #F8FAFC; margin-top: 4px;">
+                </div>
+                <div>
+                    <label style="font-weight: 600; font-size: 14px; color: #64748B;">Role Authorization Level</label>
+                    <input type="text" value="Level 9 (Global Access)" disabled style="width: 100%; padding: 10px; border: 1px solid #E2E8F0; border-radius: 8px; background: #F8FAFC; margin-top: 4px;">
+                </div>
+                <div style="margin-top: 16px;">
+                    <button style="background: #0066FF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: not-allowed; opacity: 0.7;">Save Changes</button>
+                    <p style="font-size: 12px; color: #64748B; margin-top: 8px;">Notice: Profile modifications require physical biometric confirmation.</p>
                 </div>
             </div>
-            <p class="hint">Tip: Local storage is often used to store persistent data, but it's not secure for secrets.</p>
+            <div id="result" class="hidden">
+                <div class="alert success" style="margin-top: 24px;">
+                    <strong>Session Token Validated:</strong> <span class="flag">FLAG{LOCAL_STORAGE_SECRET}</span>
+                </div>
+            </div>
         </div>
     </div>
     <script>
-        localStorage.setItem('secret_flag', 'FLAG{LOCAL_STORAGE_SECRET}');
+        // Store sensitive session token silently
+        localStorage.setItem('auth_session_token', 'FLAG{LOCAL_STORAGE_SECRET}');
     </script>
 </body>
 </html>
