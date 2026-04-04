@@ -80,12 +80,12 @@
 
 /* Cyber Grid Background */
 .cyber-grid {
-    background-color: #0a0e17;
+    background-color: #0a0e17 !important;
     background-image: 
       linear-gradient(rgba(0, 163, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 163, 255, 0.05) 1px, transparent 1px);
-    background-size: 32px 32px;
-    animation: gridScroll 20s linear infinite;
+      linear-gradient(90deg, rgba(0, 163, 255, 0.05) 1px, transparent 1px) !important;
+    background-size: 32px 32px !important;
+    animation: gridScroll 20s linear infinite !important;
 }
 
 @keyframes gridScroll {
