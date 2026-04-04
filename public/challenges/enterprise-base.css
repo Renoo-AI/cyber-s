@@ -1,0 +1,382 @@
+/* 
+ * ENTERPRISE SIMULATION CSS - Levels 21-80
+ * High-Fidelity Corporate Security Training Interface
+ * Palette: Corporate Neutral (Whites, Deep Grays, Subtle Borders)
+ */
+
+:root {
+    /* Corporate Neutral Palette */
+    --corp-white: #ffffff;
+    --corp-offwhite: #f9fafb;
+    --corp-gray-50: #f9fafb;
+    --corp-gray-100: #f3f4f6;
+    --corp-gray-200: #e5e7eb;
+    --corp-gray-300: #d1d5db;
+    --corp-gray-400: #9ca3af;
+    --corp-gray-500: #6b7280;
+    --corp-gray-600: #4b5563;
+    --corp-gray-700: #374151;
+    --corp-gray-800: #1f2937;
+    --corp-gray-900: #111827;
+    
+    /* Brand Colors (Subtle) */
+    --corp-primary: #2563eb;
+    --corp-primary-hover: #1d4ed8;
+    --corp-success: #059669;
+    --corp-success-bg: #ecfdf5;
+    --corp-warning: #d97706;
+    --corp-warning-bg: #fffbeb;
+    --corp-danger: #dc2626;
+    --corp-danger-bg: #fef2f2;
+    --corp-info: #0284c7;
+    --corp-info-bg: #f0f9ff;
+    
+    /* Typography */
+    --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    
+    /* Borders */
+    --border-subtle: 1px solid var(--corp-gray-200);
+    --border-default: 1px solid var(--corp-gray-300);
+    --border-strong: 1px solid var(--corp-gray-400);
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* GPU Stabilization - Kill Palette Glitch */
+* {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--corp-gray-50);
+    color: var(--corp-gray-900);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* Main Container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Card Component - Enterprise Style */
+.card {
+    background: var(--corp-white);
+    border-radius: 8px;
+    border: var(--border-default);
+    box-shadow: var(--shadow-md);
+    padding: 32px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: var(--border-subtle);
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--corp-gray-900);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: var(--corp-gray-500);
+    margin-top: 4px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family);
+    color: var(--corp-gray-900);
+    margin: 0 0 16px 0;
+}
+
+h1 { font-size: 24px; font-weight: 600; }
+h2 { font-size: 20px; font-weight: 600; }
+h3 { font-size: 16px; font-weight: 600; }
+
+p {
+    font-size: 14px;
+    color: var(--corp-gray-600);
+    line-height: 1.6;
+    margin: 0 0 16px 0;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--corp-gray-700);
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: var(--font-family);
+    color: var(--corp-gray-900);
+    background: var(--corp-white);
+    border: var(--border-default);
+    border-radius: 6px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--corp-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+input[disabled],
+textarea[disabled] {
+    background: var(--corp-gray-100);
+    color: var(--corp-gray-500);
+    cursor: not-allowed;
+}
+
+/* Buttons */
+button, .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-family);
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary {
+    background: var(--corp-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--corp-primary-hover);
+}
+
+.btn-secondary {
+    background: var(--corp-white);
+    color: var(--corp-gray-700);
+    border: var(--border-default);
+}
+
+.btn-secondary:hover {
+    background: var(--corp-gray-50);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Data Tables - Enterprise Style */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: var(--border-subtle);
+}
+
+.data-table th {
+    font-weight: 600;
+    color: var(--corp-gray-700);
+    background: var(--corp-gray-50);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.data-table tr:hover {
+    background: var(--corp-gray-50);
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alert Components */
+.alert {
+    padding: 14px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin: 16px 0;
+    border: var(--border-subtle);
+}
+
+.alert-info {
+    background: var(--corp-info-bg);
+    color: var(--corp-info);
+    border-color: rgba(2, 132, 199, 0.2);
+}
+
+.alert-success {
+    background: var(--corp-success-bg);
+    color: var(--corp-success);
+    border-color: rgba(5, 150, 105, 0.2);
+}
+
+.alert-warning {
+    background: var(--corp-warning-bg);
+    color: var(--corp-warning);
+    border-color: rgba(217, 119, 6, 0.2);
+}
+
+.alert-danger {
+    background: var(--corp-danger-bg);
+    color: var(--corp-danger);
+    border-color: rgba(220, 38, 38, 0.2);
+}
+
+.alert strong {
+    font-weight: 600;
+}
+
+/* Flag Display */
+.flag {
+    display: inline-block;
+    padding: 8px 12px;
+    background: var(--corp-gray-100);
+    border: var(--border-subtle);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--corp-primary);
+    word-break: break-all;
+    margin-top: 8px;
+}
+
+/* Badge Component */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.badge-success {
+    background: var(--corp-success-bg);
+    color: var(--corp-success);
+}
+
+.badge-warning {
+    background: var(--corp-warning-bg);
+    color: var(--corp-warning);
+}
+
+.badge-danger {
+    background: var(--corp-danger-bg);
+    color: var(--corp-danger);
+}
+
+.badge-info {
+    background: var(--corp-info-bg);
+    color: var(--corp-info);
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.text-muted {
+    color: var(--corp-gray-500);
+}
+
+.text-small {
+    font-size: 12px;
+}
+
+.mt-4 { margin-top: 16px; }
+.mb-4 { margin-bottom: 16px; }
+.mt-6 { margin-top: 24px; }
+.mb-6 { margin-bottom: 24px; }
+
+/* Hint Section - Minimalist */
+.hint {
+    font-size: 13px;
+    color: var(--corp-gray-500);
+    font-style: italic;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: var(--border-subtle);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    .data-table {
+        font-size: 13px;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px;
+    }
+}

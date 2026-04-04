@@ -3,39 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challenge 25 - Referer Check</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Challenge 25 - Referer Header Validation | Security Gateway</title>
+    <link rel="stylesheet" href="../enterprise-base.css">
+    <link rel="stylesheet" href="../tactical-overlay.css">
+    <style>
+        body {
+            background-color: #f9fafb;
+            align-items: flex-start;
+            padding-top: 60px;
+        }
+        
+        .gateway-container {
+            max-width: 700px;
+        }
+        
+        .gateway-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .gateway-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .gateway-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 8px 0;
+        }
+        
+        .gateway-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .status-panel {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .status-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .status-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #111827;
+            padding: 4px 10px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+        
+        .access-denied-banner {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-left: 4px solid #dc2626;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        
+        .access-denied-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+        
+        .access-denied-message {
+            font-size: 13px;
+            color: #991b1b;
+            line-height: 1.5;
+        }
+        
+        .verification-steps {
+            margin: 24px 0;
+        }
+        
+        .step {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: #e5e7eb;
+            color: #374151;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            font-size: 13px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .action-buttons button {
+            flex: 1;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container gateway-container">
         <div class="card">
-            <h1>Referer Validation</h1>
-            <p>This page only shows the flag if you come from 'https://trusted-site.com'.</p>
-            <div id="status-info">
-                <div class="alert info">
-                    <strong>Current Referer:</strong> <span id="referer-val" class="highlight">None</span>
+            <div class="gateway-header">
+                <div class="gateway-icon">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <h1 class="gateway-title">Security Gateway</h1>
+                <p class="gateway-subtitle">Referer Header Validation System</p>
+            </div>
+            
+            <div class="access-denied-banner" id="access-banner">
+                <div class="access-denied-title">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    Access Restricted
+                </div>
+                <p class="access-denied-message">
+                    This resource is only accessible from trusted referrers. Current request origin does not match the allowed whitelist.
+                </p>
+            </div>
+            
+            <div class="status-panel">
+                <div class="status-row">
+                    <span class="status-label">Request Origin</span>
+                    <span class="status-value" id="referer-display">None Detected</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Trusted Domain</span>
+                    <span class="status-value">trusted-site.com</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Validation Status</span>
+                    <span class="badge badge-danger" id="validation-status">FAILED</span>
                 </div>
             </div>
+            
+            <div class="verification-steps">
+                <h3 style="font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 16px;">Bypass Verification Steps:</h3>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">Navigate to a page on <code>trusted-site.com</code></div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">From that page, click a link or redirect to this security gateway</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">The referer header will be validated and access granted if trusted</div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="simulateRedirect()">Simulate Redirect</button>
+                <button class="btn btn-primary" onclick="checkAccess()">Validate Access</button>
+            </div>
+            
             <div id="result" class="hidden">
-                <div class="alert success">
-                    <strong>Trusted!</strong> The flag is: <span class="flag">FLAG{REFERER_HEADER_SPOOF}</span>
+                <div class="alert alert-success" style="margin-top: 20px;">
+                    <strong>Access Granted:</strong> Referer validation successful. Trusted origin confirmed.
+                    <span class="flag">FLAG{REFERER_HEADER_SPOOF_SUCCESS}</span>
                 </div>
             </div>
-            <p class="hint">Tip: You can spoof the Referer header using browser extensions or by creating a local HTML file that redirects here.</p>
+            
+            <div class="hint">
+                <strong>Intel:</strong> The Referer header can be spoofed using browser extensions, custom HTTP clients, or by creating a local HTML file that redirects here.
+            </div>
         </div>
     </div>
+    
+    <!-- Byte's Tactical Overlay -->
+    <div class="byte-tactical-overlay" id="byte-overlay">
+        <div class="byte-tactical-header">
+            <div class="byte-tactical-title">
+                <div class="byte-status-indicator"></div>
+                Byte Intelligence
+            </div>
+            <div class="byte-tactical-controls">
+                <button class="byte-control-btn" onclick="toggleByte()" title="Toggle">−</button>
+                <button class="byte-control-btn" onclick="closeByte()" title="Close">×</button>
+            </div>
+        </div>
+        <div class="byte-tactical-content">
+            <div class="byte-intel-terminal">
+                <div class="byte-intel-header">
+                    <span class="byte-intel-icon">◈</span>
+                    <span class="byte-intel-label">INTEL BRIEFING</span>
+                </div>
+                <div class="byte-hint-level byte-hint-level-info">INFO LEVEL</div>
+                <div class="byte-intel-body">
+                    <p><strong>Target:</strong> Referer Header Validation</p>
+                    <p><strong>Vulnerability:</strong> Client-side header trust</p>
+                    <div class="byte-code-snippet">
+                        if (referer.includes('trusted-site.com')) {<br>
+                        &nbsp;&nbsp;grantAccess();<br>
+                        }
+                    </div>
+                    <p><strong>Tactical Note:</strong> HTTP headers sent by the browser can be manipulated. Server-side validation is essential.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // In a real scenario, the server checks the header.
-        // We simulate this by checking document.referrer
         const referer = document.referrer;
-        const refererVal = document.getElementById('referer-val');
-        const result = document.getElementById('result');
-
+        const refererDisplay = document.getElementById('referer-display');
+        const validationStatus = document.getElementById('validation-status');
+        const resultDiv = document.getElementById('result');
+        const accessBanner = document.getElementById('access-banner');
+        
+        // Update referer display
         if (referer) {
-            refererVal.textContent = referer;
-            if (referer.includes('trusted-site.com')) {
-                result.classList.remove('hidden');
+            refererDisplay.textContent = new URL(referer).hostname || referer;
+        }
+        
+        function checkAccess() {
+            if (referer && referer.includes('trusted-site.com')) {
+                // Access granted
+                validationStatus.className = 'badge badge-success';
+                validationStatus.textContent = 'PASSED';
+                accessBanner.style.display = 'none';
+                resultDiv.classList.remove('hidden');
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                // Show error
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.innerHTML = '<strong>Validation Failed:</strong> The referer header does not match the trusted domain.';
+                errorDiv.style.marginTop = '16px';
+                
+                const existingError = document.querySelector('.action-buttons + .alert-danger');
+                if (existingError) {
+                    existingError.remove();
+                }
+                document.querySelector('.action-buttons').insertAdjacentElement('afterend', errorDiv);
             }
+        }
+        
+        function simulateRedirect() {
+            // Create a temporary form to simulate coming from trusted site
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'alert alert-info';
+            infoDiv.innerHTML = '<strong>Simulation:</strong> In a real scenario, create an HTML file on a server with "trusted-site.com" in the domain, then link to this page.';
+            infoDiv.style.marginTop = '16px';
+            
+            const existingInfo = document.querySelector('.action-buttons + .alert-info');
+            if (existingInfo) {
+                existingInfo.remove();
+            }
+            document.querySelector('.action-buttons').insertAdjacentElement('afterend', infoDiv);
+        }
+        
+        // Byte overlay controls
+        function toggleByte() {
+            document.getElementById('byte-overlay').classList.toggle('minimized');
+        }
+        
+        function closeByte() {
+            document.getElementById('byte-overlay').style.display = 'none';
         }
     </script>
 </body>

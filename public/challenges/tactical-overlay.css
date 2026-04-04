@@ -1,0 +1,240 @@
+/* 
+ * TACTICAL OVERLAY - Byte's Intel Briefing System
+ * Minimalist, Translucent, Discreet HUD for Levels 21+
+ */
+
+:root {
+    --tactical-bg: rgba(17, 24, 39, 0.95);
+    --tactical-border: rgba(55, 65, 81, 0.8);
+    --tactical-text: #e5e7eb;
+    --tactical-muted: #9ca3af;
+    --tactical-accent: #3b82f6;
+    --tactical-success: #10b981;
+    --tactical-warning: #f59e0b;
+    --tactical-danger: #ef4444;
+}
+
+/* Byte Tactical Container */
+.byte-tactical-overlay {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    max-width: calc(100vw - 40px);
+    background: var(--tactical-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--tactical-border);
+    border-radius: 8px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    overflow: hidden;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Tactical Header */
+.byte-tactical-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(55, 65, 81, 0.5);
+    border-bottom: 1px solid var(--tactical-border);
+    cursor: move;
+}
+
+.byte-tactical-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--tactical-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.byte-status-indicator {
+    width: 8px;
+    height: 8px;
+    background: var(--tactical-success);
+    border-radius: 50%;
+    animation: pulse-status 2s ease-in-out infinite;
+}
+
+@keyframes pulse-status {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.byte-tactical-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.byte-control-btn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--tactical-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 150ms ease;
+    font-size: 14px;
+}
+
+.byte-control-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--tactical-text);
+}
+
+/* Tactical Content - Terminal Style */
+.byte-tactical-content {
+    padding: 14px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+/* Intel Briefing Terminal */
+.byte-intel-terminal {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--tactical-border);
+    border-radius: 6px;
+    padding: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.byte-intel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--tactical-border);
+}
+
+.byte-intel-icon {
+    color: var(--tactical-accent);
+    font-size: 14px;
+}
+
+.byte-intel-label {
+    color: var(--tactical-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.byte-intel-body {
+    color: var(--tactical-text);
+}
+
+.byte-intel-body p {
+    margin: 0 0 8px 0;
+}
+
+.byte-intel-body p:last-child {
+    margin-bottom: 0;
+}
+
+.byte-code-snippet {
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 10px;
+    border-radius: 4px;
+    margin: 8px 0;
+    color: var(--tactical-success);
+    font-size: 11px;
+    overflow-x: auto;
+}
+
+/* Tactical Hint Levels */
+.byte-hint-level {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.byte-hint-level-info {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--tactical-accent);
+}
+
+.byte-hint-level-warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--tactical-warning);
+}
+
+.byte-hint-level-critical {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--tactical-danger);
+}
+
+/* Tactical Scrollbar */
+.byte-tactical-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.byte-tactical-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.byte-tactical-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.byte-tactical-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Minimized State */
+.byte-tactical-overlay.minimized .byte-tactical-content {
+    display: none;
+}
+
+.byte-tactical-overlay.minimized {
+    width: auto;
+}
+
+/* Fade In Animation */
+@keyframes byte-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.byte-tactical-overlay {
+    animation: byte-fade-in 300ms ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .byte-tactical-overlay {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        max-width: none;
+    }
+}
